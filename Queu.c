@@ -7,10 +7,10 @@
 //implement queue syncronic functions
 Node * createNode(void * data, int size){
     Node* node=(Node*)malloc(sizeof(Node));
-    node->data=malloc(size);
-    memcpy(node->data,data,size);
-    if(node==NULL)
-        exit(1);
+    //node->data=malloc(size);
+    node->data=data;
+    //memcpy(node->data,data,size);
+    //  exit(1);
     return node;
 }
 
@@ -49,7 +49,7 @@ int getCapacity(Queue* q){
 }
 int getSize(Queue* q){
     return q->size;
-  }
+}
 void enqueu(Queue* q,Node* data){
 
     sem_wait(&q->sem);//lock sem
@@ -78,11 +78,11 @@ Node* dequeue(Queue* q){
         q->head=q->head->next;
         q->size--;
         if(isEmpty(q))
-             q->head=q->tail=NULL;
+            q->head=q->tail=NULL;
         sem_post(&q->sem);//free sem
         return temp;
     }
-     sem_post(&q->sem);//free sem
+    sem_post(&q->sem);//free sem
     return NULL;
 }
 int isEmpty(Queue* q){
@@ -90,7 +90,7 @@ int isEmpty(Queue* q){
 }
 int isFull(Queue *q){
     sem_wait(&q->sem);//lock sem
-int isFull=q->size==q->capacity;
-sem_post(&q->sem);//free sem
-return isFull;
+    int isFull=q->size==q->capacity;
+    sem_post(&q->sem);//free sem
+    return isFull;
 }

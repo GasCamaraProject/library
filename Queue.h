@@ -5,7 +5,7 @@
 typedef struct node{
     void* data;
     struct node* next;
-    }Node;
+}Node;
 
 typedef struct queue{
     sem_t sem;
