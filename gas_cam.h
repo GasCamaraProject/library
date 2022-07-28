@@ -8,7 +8,8 @@
 #include "Queue.h"
 #include <pthread.h>
 #include <stdbool.h>
-
+#include <stdlib.h>
+#include <stdio.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -36,6 +37,10 @@ typedef struct stage{
 
 typedef struct handler{
     stage stages[STAGES_NUMBER];
+    bool is_snapshot_on;
+    bool is_record_on;
+    FILE *  fp;
+
 }handler;
 
 typedef struct streaming_t{
@@ -47,7 +52,7 @@ typedef struct snapshot_t{
     char* file_name;  //full path ?
     int width;
     int height;
-    int type;  //GPEG,PNG
+    int type;  //GPEG,PNG,ppm
 }snapshot_t;
 
 typedef struct gpio_t{
@@ -65,7 +70,13 @@ typedef struct record_t{
     int height;
     int fps;
 }record_t;
-
+typedef struct ppm_image{
+    int width;
+    int height;
+    char *data;
+    size_t size;
+    char * name;
+} ppm_image;
 typedef struct {
     void* (*init)();
     void (*free_all)(void* handle);
@@ -73,7 +84,7 @@ typedef struct {
     int (*stop_record)(void* handler);
     int (*start_streaming)(streaming_t*,char * file_name);
     int (*stop_streamig)(streaming_t*);
-    int (*do_snapshot)(snapshot_t*);
+    int (*do_snapshot)(void*);
     char* (*get_dll_version)();
     char* (*get_video_statics)(record_t*);
     char* (*get_status)();
